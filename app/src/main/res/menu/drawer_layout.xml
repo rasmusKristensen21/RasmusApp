@@ -1,0 +1,56 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:id="@+id/data">
+        <item
+            android:id="@+id/nav_moves"
+            android:icon="@drawable/ic_moves"
+            android:title="new moves" />
+        <item
+            android:id="@+id/nav_abilities"
+            android:icon="@drawable/ic_abilities"
+            android:title="abilities" />
+        <item
+            android:id="@+id/nav_items"
+            android:icon="@drawable/ic_items"
+            android:title="items" />
+        <item
+            android:id="@+id/nav_locations"
+            android:icon="@drawable/ic_locations"
+            android:title="locations" />
+        <item
+            android:id="@+id/nav_natures"
+            android:icon="@drawable/ic_natures"
+            android:title="natures" />
+
+    </group>
+    <group android:id="@+id/tools">
+
+        <item
+            android:id="@+id/nav_type_chart"
+            android:icon="@drawable/ic_type_chart"
+            android:title="chart" />
+
+        <item
+            android:id="@+id/nav_iv_calculator"
+            android:icon="@drawable/ic_iv_calculator"
+            android:title="calculator" />
+    </group>
+
+    <group android:id="@+id/other">
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="settings" />
+
+        <item
+            android:id="@+id/sign_out"
+            android:icon="@drawable/ic_settings"
+            android:title="sign Out"
+            />
+
+
+    </group>
+</menu>

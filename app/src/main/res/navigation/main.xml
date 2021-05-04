@@ -4,23 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    app:startDestination="@+id/navDefault">
+    app:startDestination="@id/home">
 
     <fragment
         android:id="@+id/home"
-        android:name="com.example.myapp.HomeFragment"
+        android:name="com.example.myapp.UI.Fragments.HomeFragment"
         android:label="home"
         tools:layout="@layout/fragment_home"/>
 
     <fragment
-        android:id="@+id/drinks"
-        android:name="com.example.myapp.DrinksFragment"
+        android:id="@+id/drink"
+        android:name="com.example.myapp.UI.Fragments.DrinksFragment"
         android:label="drinks"
         tools:layout="@layout/fragment_drinks"/>
 
     <fragment
         android:id="@+id/order"
-        android:name="com.example.myapp.OrderFragment"
+        android:name="com.example.myapp.UI.Fragments.OrderFragment"
         android:label="order"
         tools:layout="@layout/fragment_order"/>
 

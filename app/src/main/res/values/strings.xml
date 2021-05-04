@@ -2,6 +2,8 @@
     <string name="app_name">MyApp</string>
     <string name="title_activity_buttom_navigation">MainActivity</string>
     <string name="title_home">Home</string>
+    <string name="nav_open">1</string>
+    <string name="nav_close">1</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <!-- TODO: Remove or change this placeholder text -->
