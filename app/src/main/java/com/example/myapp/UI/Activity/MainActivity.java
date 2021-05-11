@@ -132,13 +132,16 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         viewModel.getCurrentUser().observe(this, user -> {
             if (user != null) {
                 Context context = getApplicationContext();
-                CharSequence text = "Hello toast!";
-                int duration = Toast.LENGTH_SHORT;
+                CharSequence text = "hallo: "+viewModel.getCurrentUser().getValue().getEmail();
+                int duration = Toast.LENGTH_LONG;
                 Toast.makeText(context, text, duration).show();
             } else
                 startLoginActivity();
         });
 
+    }
+
+    public void addPriority(View view){
 
     }
 
@@ -155,6 +158,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
     public void signOut() {
         viewModel.signOut();
+    }
+
+    public void goToAboutUs(){
+        Navigation.findNavController(this,R.id.about_us);
     }
 
     @Override
@@ -176,13 +183,13 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 signOut();
                 break;
             }
+            case R.id.about_us:{
+                goToAboutUs();
+            }
 
         }drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    public void setCurrentUserText(){
-        placeholder=findViewById(R.id.current_user);
-        placeholder.setText("rasmus");
-    }
+
 }

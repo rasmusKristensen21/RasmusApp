@@ -1,6 +1,7 @@
 package com.example.myapp.data.Drinks;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapp.R;
 import com.example.myapp.UI.Fragments.OrderFragment;
+import com.example.myapp.UI.ViewModels.AdapterViewModel;
+import com.example.myapp.data.Database.FavoriteDrinks;
 
 import java.util.List;
 
@@ -21,10 +25,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private List<Drink> items;
     LayoutInflater inflater;
     FragmentCommunication communication;
+    AdapterViewModel viewModel;
 
-    public RecyclerAdapter(List<Drink> items, FragmentCommunication communication) {
-        this.items = items;
+
+    public RecyclerAdapter(FragmentCommunication communication, List<Drink> drinks) {
+
         this.communication = communication;
+        items = drinks;
 
     }
 
@@ -57,6 +64,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return items.size();
     }
 
+    /*public void setDrinks(List<Drink> drinks){
+        Log.d("cration",drinks.get(0).getTitle());
+        this.items=drinks;
+        notifyDataSetChanged();
+    }*/
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView title, price;
         private ImageView image;
@@ -74,6 +87,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
+
+            viewModel =new AdapterViewModel();
+            viewModel.setBundle(items.get(getBindingAdapterPosition()).getTitle(),items.get(getBindingAdapterPosition()).getPrice(),items.get(getBindingAdapterPosition()).getImage());
             communicatoren.respons(items.get(getBindingAdapterPosition()).getTitle(),items.get(getBindingAdapterPosition()).getPrice(),items.get(getBindingAdapterPosition()).getImage());
 
         }
