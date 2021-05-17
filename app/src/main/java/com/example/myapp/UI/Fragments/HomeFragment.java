@@ -2,11 +2,11 @@ package com.example.myapp.UI.Fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,24 +15,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myapp.R;
-import com.example.myapp.UI.Activity.MainActivity;
 import com.example.myapp.UI.ViewModels.HomeViewModel;
-import com.example.myapp.data.Database.FavoriteDrinks;
+import com.example.myapp.data.Drinks.Drink;
+import com.example.myapp.data.Drinks.FragmentCommunication;
 import com.example.myapp.data.Drinks.RecyclerAdapter;
+import com.example.myapp.data.databaseNew.DatabaseHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 //import com.google.firebase.referencecode.database.models.Post;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 
 public class HomeFragment extends Fragment {
@@ -44,6 +39,7 @@ TextView placeholder;
     private FirebaseUser firebaseUser;
     private HomeViewModel viewModel;
     private RecyclerView drinksList;
+
 
     private RecyclerAdapter adapter;
 
@@ -59,19 +55,73 @@ TextView placeholder;
         inflate = inflater.inflate(R.layout.fragment_home, container, false);
 
         drinksList = inflate.findViewById(R.id.recycler_fave);
+
         drinksList.setHasFixedSize(true);
 
         drinksList.setLayoutManager(new GridLayoutManager(getActivity(),2));
 
-        viewModel= ViewModelProviders.of(this).get(HomeViewModel.class);
-        /*viewModel.getAllItems().observe(getViewLifecycleOwner(), new Observer<List<FavoriteDrinks>>() {
+        FragmentCommunication communication=new FragmentCommunication() {
             @Override
-            public void onChanged(List<FavoriteDrinks> favoriteDrinks) {
+            public void respons(String title, String price, int image) {
 
-                //adapter.setDrinks(favoriteDrinks);
+
+                Navigation.findNavController(getView()).navigate(R.id.order);
+
 
             }
+
+        };
+
+        viewModel= ViewModelProviders.of(this).get(HomeViewModel.class);
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
+
+
+        //Delete all rows
+       /*if(databaseHelper.deleteAll()){
+            Log.d("all", "Deleted");
+        }*/
+
+
+
+        //RecyclerAdapter adapter  = new RecyclerAdapter(communication,databaseHelper.getAllDrinks());
+
+        
+
+
+        /*databaseHelper.getAllDrinks().observe(getViewLifecycleOwner(), new Observer<List<Drink>>() {
+            @Override
+            public void onChanged(List<Drink> drinks) {
+                //adapter.setDrinks(drinks);
+            }
         });*/
+
+        viewModel.getCurrentClub().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+
+
+            }
+        });
+        //update when ever there is a change in database
+        viewModel.getAllItems(getContext()).observe(getViewLifecycleOwner(), new Observer<List<Drink>>() {
+            @Override
+            public void onChanged(List<Drink> drinks) {
+
+
+                Log.d("dsagee",drinks.get(0).getClubId());
+                Log.d("dsagee",drinks.get(1).getClubId());
+
+                RecyclerAdapter adapter  = new RecyclerAdapter(communication,drinks);
+
+                drinksList.setAdapter(adapter);
+                drinksList.setItemAnimator(new DefaultItemAnimator());
+
+            }
+        });
+
+
+
         return inflate;
 
     }

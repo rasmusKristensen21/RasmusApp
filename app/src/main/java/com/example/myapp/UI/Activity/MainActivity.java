@@ -85,7 +85,8 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
         appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.home,
                 R.id.drink,
-                R.id.order
+                R.id.order,
+                R.id.map
         ).setOpenableLayout(drawer).build();
 
         NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                     case R.id.home:
                     case R.id.drink:
                     case R.id.order:
+                    case R.id.map:
                         bottomNavigationView.setVisibility(View.VISIBLE);
                 }
             }

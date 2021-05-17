@@ -11,9 +11,14 @@ public class AdapterViewModel {
 
 
 
-    public void setBundle(String name,String price,int image){
+    public void setBundle(String title,String price,int image,int pricetag){
        repo = ClickedDrinkRepository.getGetInstance();
-       repo.setArray(price,name,image);
+       repo.setArray(price,title,image,pricetag);
+    }
+
+    public void setBundle1(String title,String price,int image,int pricetag,String clubId){
+        repo = ClickedDrinkRepository.getGetInstance();
+        repo.setArray1(price,title,image,pricetag,clubId);
     }
 
 }

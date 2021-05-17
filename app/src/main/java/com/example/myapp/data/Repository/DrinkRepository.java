@@ -1,78 +1,167 @@
 package com.example.myapp.data.Repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myapp.R;
-import com.example.myapp.data.Database.DrinkDao;
-import com.example.myapp.data.Database.FavoriteDrinkDatabase;
-import com.example.myapp.data.Database.FavoriteDrinks;
 import com.example.myapp.data.Drinks.Drink;
-import com.example.myapp.data.models.DrinkModel;
+import com.example.myapp.data.databaseNew.DatabaseHelper;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class DrinkRepository implements DrinkDao {// interface
+public class DrinkRepository  {// interface
 
     private static DrinkRepository instance;
-    private DrinkDao drinks;
-    private LiveData<List<FavoriteDrinks>> allDrinks;
+
+    private MutableLiveData<List<Drink>> allDrinks = new MutableLiveData<>();
+    private MutableLiveData<List<Drink>> data = new MutableLiveData<>();
+    private MutableLiveData<String> clubChange = new MutableLiveData<>();
     private ExecutorService executor;
     private ArrayList<Drink> datas = new ArrayList<>();
+    private String club;
+    private List<Drink> listen;
+    private List<Drink> listen2;
+    private List<Drink> listen3;
 
     private DrinkRepository(){
 
     }
-    private DrinkRepository(Application app){
+    /*private DrinkRepository(Application app){
         FavoriteDrinkDatabase database = FavoriteDrinkDatabase.getInstance(app);
         drinks = database.dao();//databasen
-        allDrinks = drinks.getAllDrinks();
+        allDrinks= drinks.getAllDrinks();
+
         executor = Executors.newFixedThreadPool(2);
-    }
+    }*/
 
 
     public static DrinkRepository getGetInstance(){
         if(instance==null){
+
             instance = new DrinkRepository();
         }
 
         return instance;
     }
 
-    /*public static synchronized DrinkRepository getGetInstance(Application app){
+   /* public static synchronized DrinkRepository getGetInstance(Application app){
 
         if(instance==null){
+
             instance = new DrinkRepository(app);
         }
         return instance;
     }*/
 
+    public MutableLiveData<String> getClub(){
+        return clubChange;
+    }
+
+    public void setClub(String clubId){
+        clubChange.setValue(clubId);
+    }
+
+    public void setData(String clubId){
+
+
+        switch (clubId){
+            case "Chad's Cocktail Empire":
+
+                listen = new ArrayList<>();
+                listen.add(new Drink("Bloody Mary","48 kr.",R.mipmap.bloody_mary_round,48,clubId));
+                listen.add(new Drink("Cosmopolitan","38 kr.",R.mipmap.cosmopolita_round,38,clubId));
+                listen.add(new Drink("Daiquiri","45 kr.",R.mipmap.daiq_round,45,clubId));
+                listen.add(new Drink("Sex on the Beach","45 kr.",R.mipmap.sex_on_the_beach_round,45,clubId));
+                listen.add(new Drink("Mojito","68 kr.",R.mipmap.mojito_round,68,clubId));
+                listen.add(new Drink("Sidecar","35 kr.",R.mipmap.side_car_round,35,clubId));
+                listen.add(new Drink("Piña Colada","50 kr.",R.mipmap.pina_round,50,clubId));
+                listen.add(new Drink("Frozen Margharita","70 kr.",R.mipmap.frozen_margarita_round,70,clubId));
+                listen.add(new Drink("Tequila Sunrise","65 kr.",R.mipmap.tequila_sunrise_round,65,clubId));
+                listen.add(new Drink("Manhattan","53 kr.",R.mipmap.manhattan_round,53,clubId));
+
+                data.setValue(listen);
+
+                break;
+            case "Café Mojo":
+
+                listen2 = new ArrayList<>();
+                listen2.add(new Drink("peter","48 kr.",R.mipmap.bloody_mary_round,48,clubId));
+                listen2.add(new Drink("ingo","38 kr.",R.mipmap.cosmopolita_round,38,clubId));
+                listen2.add(new Drink("jens","45 kr.",R.mipmap.daiq_round,45,clubId));
+                listen2.add(new Drink("bro","45 kr.",R.mipmap.sex_on_the_beach_round,45,clubId));
+                listen2.add(new Drink("ndsa","68 kr.",R.mipmap.mojito_round,68,clubId));
+                listen2.add(new Drink("ikka","35 kr.",R.mipmap.side_car_round,35,clubId));
+                listen2.add(new Drink("sendds","50 kr.",R.mipmap.pina_round,50,clubId));
+                listen2.add(new Drink("zenzyg","70 kr.",R.mipmap.frozen_margarita_round,70,clubId));
+                listen2.add(new Drink("nowa","65 kr.",R.mipmap.tequila_sunrise_round,65,clubId));
+                listen2.add(new Drink("bryt","53 kr.",R.mipmap.manhattan_round,53,clubId));
+
+                List<Drink> listen1 = new ArrayList<>();
+
+
+                data.setValue(listen2);
+                break;
+            case "Club Zenzyg":
+
+
+                listen3= new ArrayList<>();
+                listen3.add(new Drink("venus","48 kr.",R.mipmap.bloody_mary_round,48,clubId));
+                listen3.add(new Drink("merkur","38 kr.",R.mipmap.cosmopolita_round,38,clubId));
+                listen3.add(new Drink("mars","45 kr.",R.mipmap.daiq_round,45,clubId));
+                listen3.add(new Drink("jorden","45 kr.",R.mipmap.sex_on_the_beach_round,45,clubId));
+                listen3.add(new Drink("saturn","68 kr.",R.mipmap.mojito_round,68,clubId));
+                listen3.add(new Drink("Jupiter","35 kr.",R.mipmap.side_car_round,35,clubId));
+                listen3.add(new Drink("Neptun","50 kr.",R.mipmap.pina_round,50,clubId));
+                listen3.add(new Drink("pluto","70 kr.",R.mipmap.frozen_margarita_round,70,clubId));
+                listen3.add(new Drink("solen","65 kr.",R.mipmap.tequila_sunrise_round,65,clubId));
+                listen3.add(new Drink("stjernene","53 kr.",R.mipmap.manhattan_round,53,clubId));
+
+
+
+                data.setValue(listen3);
+                break;
+
+        }
+
+    }
     public MutableLiveData<List<Drink>> fetchData(){
 
-        datas.add(new Drink("Bloody Mary","48 kr.",R.mipmap.bloody_mary_round));
-        datas.add(new Drink("Cosmopolitan","38 kr.",R.mipmap.cosmopolita_round));
-        datas.add(new Drink("Daiquiri","45 kr.",R.mipmap.daiq_round));
+/*
+        datas.add(new Drink("Bloody Mary","48 kr.",R.mipmap.bloody_mary_round,48));
+        datas.add(new Drink("Cosmopolitan","38 kr.",R.mipmap.cosmopolita_round,38));
+        datas.add(new Drink("Daiquiri","45 kr.",R.mipmap.daiq_round,45));
+        datas.add(new Drink("Sex on the Beach","45 kr.",R.mipmap.sex_on_the_beach_round,45));
+        datas.add(new Drink("Mojito","68 kr.",R.mipmap.mojito_round,68));
+        datas.add(new Drink("Sidecar","35 kr.",R.mipmap.side_car_round,35));
+        datas.add(new Drink("Piña Colada","50 kr.",R.mipmap.pina_round,50));
+        datas.add(new Drink("Frozen Margharita","70 kr.",R.mipmap.frozen_margarita_round,70));
+        datas.add(new Drink("Tequila Sunrise","65 kr.",R.mipmap.tequila_sunrise_round,65));
+        datas.add(new Drink("Manhattan","53 kr.",R.mipmap.manhattan_round,53));
 
-        MutableLiveData<List<Drink>> data = new MutableLiveData<>();
-        data.setValue(datas);
+         data = new MutableLiveData<>();
 
-        return  data;
+        data.setValue(datas);*/
+        return data;
 
     }
 
+    public MutableLiveData<List<Drink>> getAllDrinks(Context context) {
+        DatabaseHelper db = new DatabaseHelper(context);
+        List<Drink> listen = db.getAllDrinks();
+        Log.d("dsa",listen.toString()+"");
+        allDrinks.setValue(listen);
+        return allDrinks;
+
+    }
 
 
     public List<Drink> getData() {
@@ -90,161 +179,35 @@ public class DrinkRepository implements DrinkDao {// interface
         }*/
         return data;
     }
-    /*public MutableLiveData<List<FavoriteDrinks>> getData() {
-        MutableLiveData<List<FavoriteDrinks>>data=new MutableLiveData<>();
-        List<FavoriteDrinks> list = new List<FavoriteDrinks>() {
-            @Override
-            public int size() {
-                return 0;
-            }
 
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(@Nullable Object o) {
-                return false;
-            }
-
-            @NonNull
-            @Override
-            public Iterator<FavoriteDrinks> iterator() {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @NonNull
-            @Override
-            public <T> T[] toArray(@NonNull T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(FavoriteDrinks favoriteDrinks) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(@Nullable Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(@NonNull Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(@NonNull Collection<? extends FavoriteDrinks> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, @NonNull Collection<? extends FavoriteDrinks> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(@NonNull Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(@NonNull Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public FavoriteDrinks get(int index) {
-                return null;
-            }
-
-            @Override
-            public FavoriteDrinks set(int index, FavoriteDrinks element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, FavoriteDrinks element) {
-
-            }
-
-            @Override
-            public FavoriteDrinks remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(@Nullable Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(@Nullable Object o) {
-                return 0;
-            }
-
-            @NonNull
-            @Override
-            public ListIterator<FavoriteDrinks> listIterator() {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public ListIterator<FavoriteDrinks> listIterator(int index) {
-                return null;
-            }
-
-            @NonNull
-            @Override
-            public List<FavoriteDrinks> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
-        list.add(new FavoriteDrinks("48","Bloody Mary",R.drawable.ic_iv_calculator));
-        list.add(new FavoriteDrinks("38","Cosmopolitan",R.drawable.ic_settings));
-        data.postValue(list);
-        return data;
-    }*/
-
+/*
     @Override
-    public void insert(FavoriteDrinks drink) {
+    public void insert(Drink drink) {
         new InsertDrinkAsync(drinks).execute(drink);
     }
 
+
+
     @Override
-    public void update(FavoriteDrinks drink) {
+    public void update(Drink drink) {
         new UpdateDrinkAsync(drinks).execute(drink);
     }
 
     @Override
-    public void delete(FavoriteDrinks drink) {
-        new DeleteDrinkAsync(drinks).execute(drink);
+    public void delete(Drink drink) {
+       // new DeleteDrinkAsync(drinks).execute(drink);
     }
+
+
 
 
 
     @Override
-    public LiveData<List<FavoriteDrinks>> getAllDrinks() {
-
-        return allDrinks;
-
+    public void deleteAllDrinks() {
+        allDrinks.getValue().clear();
     }
 
-    private static class InsertDrinkAsync extends AsyncTask<FavoriteDrinks,Void,Void>{
+    private static class InsertDrinkAsync extends AsyncTask<Drink,Void,Void>{
 
         private DrinkDao drinks;
 
@@ -252,14 +215,13 @@ public class DrinkRepository implements DrinkDao {// interface
             this.drinks=fDrink;
         }
         @Override
-        protected Void doInBackground(FavoriteDrinks... favoriteDrinks) {
-
-            drinks.insert(favoriteDrinks[0]);
+        protected Void doInBackground(Drink... drink) {
+            drinks.insert(drink[0]);
             return null;
         }
 }
 
-    private static class UpdateDrinkAsync extends AsyncTask<FavoriteDrinks,Void,Void>{
+    private static class UpdateDrinkAsync extends AsyncTask<Drink,Void,Void>{
 
         private DrinkDao drinks;
 
@@ -267,13 +229,13 @@ public class DrinkRepository implements DrinkDao {// interface
             this.drinks=fDrink;
         }
         @Override
-        protected Void doInBackground(FavoriteDrinks... favoriteDrinks) {
+        protected Void doInBackground(Drink... drink) {
 
-            drinks.update(favoriteDrinks[0]);
+            drinks.update(drink[0]);
             return null;
         }
     }
-    private static class DeleteDrinkAsync extends AsyncTask<FavoriteDrinks,Void,Void>{
+    private static class DeleteDrinkAsync extends AsyncTask<Void,Void,Void>{
 
         private DrinkDao drinks;
 
@@ -281,12 +243,11 @@ public class DrinkRepository implements DrinkDao {// interface
             this.drinks=fDrink;
         }
         @Override
-        protected Void doInBackground(FavoriteDrinks... favoriteDrinks) {
-
-            drinks.delete(favoriteDrinks[0]);
+        protected Void doInBackground(Void... voids) {
+            drinks.deleteAllDrinks();
             return null;
         }
-    }
+    }*/
 
 
 

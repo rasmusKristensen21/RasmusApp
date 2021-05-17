@@ -1,49 +1,69 @@
 package com.example.myapp.UI.ViewModels;
 
-import android.os.AsyncTask;
+import android.app.Application;
+import android.util.Log;
 
-import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.example.myapp.data.Database.FavoriteDrinks;
+import com.example.myapp.data.Drinks.Drink;
 import com.example.myapp.data.Repository.ClickedDrinkRepository;
 import com.example.myapp.data.Repository.DrinkRepository;
 import com.example.myapp.data.models.DrinkModel;
 
 import java.util.List;
 
-public class OrderViewModel extends ViewModel {
+public class OrderViewModel extends AndroidViewModel {
 
-    private MutableLiveData<List<FavoriteDrinks>> drink;
+    private MutableLiveData<List<Drink>> drink;
     private MutableLiveData<Boolean> updating = new MutableLiveData<>();
-    private ClickedDrinkRepository repository;
+    private DrinkRepository sendingrepository;
+    private ClickedDrinkRepository receivingrepository;
 
+    public OrderViewModel(@NonNull Application application) {
+        super(application);
 
+        postData(application);
+        reiceiveData();
+    }
 
+    public void clearDrinks(){
+        receivingrepository.clearDrinks();
+    }
 
+    public void successMetod(){
+        Log.d("dsa","success");
+    }
 
-
-    public void init(){
+    public void postData(Application app){
         if(drink!=null){
             return;//we have set the drinks list to something already
         }
-        repository= ClickedDrinkRepository.getGetInstance();
-        drink=repository.getOnClickedItem();
-
+        //sendingrepository= new DrinkRepository(app);
     }
 
-    public void addDrinkToFavorite(){
 
-    }
 
     public void addOnClickedItem( DrinkModel drink){
         updating.setValue(true);
     }
 
 
-    public LiveData<List<FavoriteDrinks>> getClickedItem(){
-        return drink;
+
+
+    public void reiceiveData(){
+        if(drink!=null){
+            return;//we have set the drinks list to something already
+        }
+        receivingrepository= ClickedDrinkRepository.getGetInstance();
     }
+
+    public MutableLiveData<List<Drink>> getClickedItem(){
+       return receivingrepository.getOnClickedItem();
+    }
+
+
+
 
 }

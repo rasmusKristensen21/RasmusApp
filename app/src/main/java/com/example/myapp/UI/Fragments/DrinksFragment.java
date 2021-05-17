@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
@@ -17,17 +15,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.myapp.UI.ViewModels.DrinkViewModel;
-import com.example.myapp.UI.ViewModels.HomeViewModel;
-import com.example.myapp.data.Database.FavoriteDrinks;
 import com.example.myapp.data.Drinks.Drink;
 import com.example.myapp.data.Drinks.FragmentCommunication;
 import com.example.myapp.R;
 import com.example.myapp.data.Drinks.RecyclerAdapter;
 import com.example.myapp.UI.Activity.MainActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -38,6 +34,7 @@ public class DrinksFragment extends Fragment {
     Class<MainActivity> activity = MainActivity.class;
     private DrinkViewModel viewModel;
     private RecyclerAdapter adapter;
+    private TextView clubId;
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +48,7 @@ public class DrinksFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_drinks, container, false);
+        clubId = rootView.findViewById(R.id.clubid);
         drinksList = rootView.findViewById(R.id.recycler);
         drinksList.setHasFixedSize(true);
 
@@ -100,10 +98,34 @@ public class DrinksFragment extends Fragment {
         });*/
 
 
-        RecyclerAdapter adapter  = new RecyclerAdapter(communication,viewModel.getData().getValue());
 
-        drinksList.setAdapter(adapter);
-        drinksList.setItemAnimator(new DefaultItemAnimator());
+
+         //adapter  = new RecyclerAdapter(communication,viewModel.getData().getValue());
+
+        //adapter  = new RecyclerAdapter(communication,viewModel.getData().getValue());
+
+
+         viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Drink>>() {
+                     @Override
+                     public void onChanged(List<Drink> drinks) {
+
+                         if(drinks.get(0).getClubId()!=null){
+                             Log.d("hapsa",(drinks.get(0).getClubId()));
+                             clubId.setText(drinks.get(0).getClubId());
+                         }
+
+
+
+                         RecyclerAdapter adapter  = new RecyclerAdapter(communication,drinks);
+
+
+                         drinksList.setAdapter(adapter);
+                         drinksList.setItemAnimator(new DefaultItemAnimator());
+                     }
+                 });
+
+
+
 
         return rootView;
 

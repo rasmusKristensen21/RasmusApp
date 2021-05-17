@@ -25,11 +25,10 @@
         tools:layout="@layout/fragment_order"/>
 
     <fragment
-        android:id="@+id/about_us"
-        android:name="com.example.myapp.UI.Fragments.about_us"
-        android:label="order"
-        tools:layout="@layout/about_us"/>
-
+        android:id="@+id/map"
+        android:name="com.example.myapp.UI.Fragments.MapsFragment"
+        android:label="Location"
+        tools:layout="@layout/fragment_maps"/>
 
 
 
