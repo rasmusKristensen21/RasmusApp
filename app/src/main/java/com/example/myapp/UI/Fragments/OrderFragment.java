@@ -1,18 +1,15 @@
 package com.example.myapp.UI.Fragments;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,22 +17,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.myapp.R;
-import com.example.myapp.UI.Activity.MainActivity;
 import com.example.myapp.UI.ViewModels.OrderViewModel;
 import com.example.myapp.data.Drinks.Drink;
-import com.example.myapp.data.databaseNew.DatabaseHelper;
-import com.example.myapp.data.models.DrinkModel;
-
-import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.namespace.QName;
 
 public class OrderFragment extends Fragment implements Serializable {
     private static final long serialVersionUID = -2163051469151804394L;
@@ -71,6 +59,13 @@ public class OrderFragment extends Fragment implements Serializable {
     int billed2;
     int billed3;
     Button enterButton;
+    Button deleteButton1;
+    Button deleteButton2;
+    Button deleteButton3;
+    int theCount;
+
+    ProgressDialog dialog;
+    TextView errorMessage;
 
 
 
@@ -87,7 +82,6 @@ public class OrderFragment extends Fragment implements Serializable {
         View view = inflater.inflate(R.layout.fragment_order, container, false);
 
 
-
         grandTotal = view.findViewById(R.id.total_price);
         name = view.findViewById(R.id.drink_name);
         image = view.findViewById(R.id.app_bar_image);
@@ -99,42 +93,46 @@ public class OrderFragment extends Fragment implements Serializable {
 
 
 
-        enterButton= view.findViewById(R.id.sendDrink);
 
-        //DatabaseHelper dbh = new DatabaseHelper(getContext());
-        //dbh.deleteAll();
+        enterButton= view.findViewById(R.id.sendDrink);
+        deleteButton1 = view.findViewById(R.id.delete);
+        deleteButton2= view.findViewById(R.id.delete2);
+        deleteButton3 = view.findViewById(R.id.delete3);
+
 
         viewModel = ViewModelProviders.of(this).get(OrderViewModel.class);
+        viewModel.init(getContext());
 
 
             viewModel.getClickedItem().observe(getViewLifecycleOwner(), drinkModels -> {
 
 
-
                 switch (drinkModels.size()){
                     case 1:
 
-                        grandTotal.setText(drinkModels.get(0).getPricetag()+"");
+                        theCount=drinkModels.get(0).getPricetag();
+                        grandTotal.setText(theCount+"");
                         break;
                     case 2:
-
-                        grandTotal.setText((drinkModels.get(0).getPricetag()+drinkModels.get(1).getPricetag())+"");
+                        theCount = (drinkModels.get(0).getPricetag()+drinkModels.get(1).getPricetag());
+                        grandTotal.setText(theCount+"");
                         break;
                     case 3:
-
-                        grandTotal.setText((drinkModels.get(0).getPricetag()+drinkModels.get(1).getPricetag()+drinkModels.get(2).getPricetag())+"");
+                        theCount = (drinkModels.get(0).getPricetag()+drinkModels.get(1).getPricetag()+drinkModels.get(2).getPricetag());
+                        grandTotal.setText(theCount+"");
                         break;
                 }
 
 
-
                 if(drinkModels.size()>0) {
 
+
                     drink1= drinkModels.get(0);
+
                     navn = drinkModels.get(0).getTitle();
                     billed = drinkModels.get(0).getImage();
                     prisen = drinkModels.get(0).getPrice();
-                    Log.d("Rasmussss",drinkModels.get(0).getClubId());
+
                     name.setText(navn);
                     image.setImageResource(billed);
                     price.setText(prisen);
@@ -143,10 +141,9 @@ public class OrderFragment extends Fragment implements Serializable {
 
 
 
-
                 if(drinkModels.size()>1) {
 
-                    drink2=drinkModels.get(1);
+                            drink2=drinkModels.get(1);
                             navn2 = drinkModels.get(1).getTitle();
                             billed2 = drinkModels.get(1).getImage();
                             prisen2 = drinkModels.get(1).getPrice();
@@ -172,13 +169,39 @@ public class OrderFragment extends Fragment implements Serializable {
                 }
 
 
-
-
-
-
             });
 
 
+            deleteButton1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Navigation.findNavController(getView()).navigate(R.id.order);
+                    viewModel.removeOneItem(drink1);
+                   // grandTotal.setText((theCount-drink1.getPricetag())+"");
+                }
+            });
+            deleteButton2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Navigation.findNavController(getView()).navigate(R.id.order);
+                    viewModel.removeOneItem(drink2);
+                   // grandTotal.setText((theCount-drink2.getPricetag())+"");
+                }
+            });
+            deleteButton3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Navigation.findNavController(getView()).navigate(R.id.order);
+                    viewModel.removeOneItem(drink3);
+                   // grandTotal.setText((theCount-drink3.getPricetag())+"");
+                }
+            });
 
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,35 +216,50 @@ public class OrderFragment extends Fragment implements Serializable {
                 price3.setText("");
                 name3.setText("");
 
+                dialog = new ProgressDialog(getActivity());
+                dialog.show();
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-
-
-                //viewModel.addDrinkToFavorite(drinken);
                 if(drink1==null){
-                    Toast.makeText(getContext(),"please go to the drinks and select one to order",Toast.LENGTH_SHORT);
+
+
+                    dialog.setContentView(R.layout.error);
+
+
                 }
                 else {
 
+
+                    dialog.setContentView(R.layout.progress);
+
+
+
+                    final Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                           dialog.dismiss();
+
+                        }
+                    },2000);
+
+
+
                     try  {
 
-                        DatabaseHelper dbh = new DatabaseHelper(getContext());
-                        boolean adding1 = dbh.addOneRow(drink1);
-                        Log.d("dbs",adding1+"calling1");
-                        DatabaseHelper dbh2 = new DatabaseHelper(getContext());
-                        boolean adding2 = dbh2.addOneRow(drink2);
-                        Log.d("dbs",adding2+"calling2");
-                        DatabaseHelper dbh3 = new DatabaseHelper(getContext());
-                        boolean adding3 = dbh3.addOneRow(drink3);
-                        Log.d("dbs",adding3+"calling3");
+                        viewModel.setDrinkInDB(drink1);
+                        viewModel.setDrinkInDB(drink2);
+                        viewModel.setDrinkInDB(drink3);
+
+
+
 
                     }
                     catch(Exception e){
 
                         Toast.makeText(getContext(),"something is wrong",Toast.LENGTH_SHORT);
                     }
-
-
-
+                    Navigation.findNavController(getView()).navigate(R.id.order);
 
 
 
@@ -244,13 +282,7 @@ public class OrderFragment extends Fragment implements Serializable {
 
 
 
-    /*@Override
-    public void onPause() {
-        super.onPause();
-        SharedPreferences preferences = this.getActivity().getSharedPreferences("drinkSelected", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor =preferences.edit();
-        editor
-    }*/
+
 }
 
 

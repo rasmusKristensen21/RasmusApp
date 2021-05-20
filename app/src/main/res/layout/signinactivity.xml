@@ -6,14 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/f9426eb767734e6db4c576dc9557176b"/>
+
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="347dp"
+        android:layout_marginTop="500dp"
         android:layout_marginEnd="160dp"
-        android:text="Sign in here"
         android:onClick="signIn"
+        android:text="Sign in here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.example.myapp.data.databaseNew;
+package com.example.myapp.data.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.myapp.data.Drinks.Drink;
 
@@ -24,7 +23,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_IMAGE = "IMAGE";//column 3
     public static final String COLUMN_RANK = "RANK";//column 4
     public static final String COLUMN_PRICEINT = "PRICEINT";//column 6
-    public static final String COLUMN_CLUBID = "CLUB";//column 7
+    public static final String COLUMN_CLUBID = "CLUB";//column 8
+    public static final String COLUMN_KLUBID = "KLUB";//column 9
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, "DRINK_FINAL", null, 2);
@@ -46,7 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //working
-    public List<Drink> getAllDrinks(){
+    /*public List<Drink> getAllDrinks(){
         List<Drink> list = new ArrayList<>();
 
         String query = "SELECT * FROM " + DRINKS_TABLE + " ORDER BY "+ COLUMN_TITLE;
@@ -68,7 +68,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int pricetag = cursor.getInt(6);
                 String clubId = cursor.getString(8);
 
+
+
+
                 Drink newDrinkAdding = new Drink(columnId,drink,price,image,rank,pricetag,clubId);
+                list.add(newDrinkAdding);
+
+            }while(cursor.moveToNext());
+        }
+        else{
+
+        }
+        cursor.close();
+        database.close();
+
+
+        return list;
+    }
+*/
+
+
+    public List<Drink> getByClubId(String club){
+        List<Drink> list = new ArrayList<>();
+
+        String query = "SELECT * FROM " + DRINKS_TABLE +" WHERE "+COLUMN_CLUBID+"='"+club+"' ORDER BY "+ COLUMN_TITLE;
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+
+        Cursor cursor = database.rawQuery(query,null);
+
+        if(cursor.moveToFirst()){
+            //loop through the result
+
+            do{
+                int columnId = cursor.getInt(0);
+                String drink = cursor.getString(1);
+                String price = cursor.getString(2);
+                int image = cursor.getInt(3);
+                int rank = cursor.getInt(4);
+                int pricetag = cursor.getInt(6);
+                String clubId = cursor.getString(8);
+
+
+                Drink newDrinkAdding = new Drink(columnId,drink,price,image,rank,pricetag,clubId);
+
+
                 list.add(newDrinkAdding);
                 Log.d("database",newDrinkAdding.toString());
             }while(cursor.moveToNext());
@@ -86,27 +131,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
-   /* public void addRow(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "ALTER TABLE "+ DRINKS_TABLE+" ADD "+ COLUMN_CLUBID +" VARCHAR";
-
-        Log.d("trying again",query);
-
-        Cursor cursor = db.rawQuery(query, null);
-        if(cursor.moveToFirst()){
-            Log.d("P3","SUCCESS");
-        }
-        else {
-            Log.d("P3","FAILURE");
-        }
-
-
-    }*/
-
     //working
-    public boolean deleteAll(){
+    public boolean deleteAll(String currentClub){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "DELETE FROM "+ DRINKS_TABLE;
+        String query = "DELETE FROM "+ DRINKS_TABLE +" WHERE "+COLUMN_CLUBID+"='"+currentClub+"'";
         Cursor cursor = db.rawQuery(query, null);
         if(cursor.moveToFirst()){
             return true;
@@ -128,11 +156,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ContentValues contenv = new ContentValues();
 
 
-
             contenv.put(COLUMN_TITLE, drink.getTitle());
             contenv.put(COLUMN_PRICE, drink.getPrice());
             contenv.put(COLUMN_IMAGE, drink.getImage());
-            contenv.put(COLUMN_RANK, drink.getPopularity());
+            contenv.put(COLUMN_RANK, drink.getPopularity()+1);
             contenv.put(COLUMN_PRICEINT, drink.getPricetag());
             contenv.put(COLUMN_CLUBID,drink.getClubId());
 

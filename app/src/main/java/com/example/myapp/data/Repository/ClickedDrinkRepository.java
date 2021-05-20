@@ -18,19 +18,14 @@ import java.util.ListIterator;
 public class ClickedDrinkRepository {
 
     private static ClickedDrinkRepository instance;
-    private String name;
-    private String price;
-    private int image;
-    private ArrayList<DrinkModel> array = new ArrayList<>();
+
     MutableLiveData<List<Drink>> data = new MutableLiveData<>();
-    MutableLiveData<List<Drink>> data1 = new MutableLiveData<>();
     private int count = 0;
     private Drink drinken1;
     private Drink drinken2;
     private Drink drinken3;
 
-
-
+    private ArrayList<Drink> drinks = new ArrayList<>();
 
 
 
@@ -44,11 +39,23 @@ public class ClickedDrinkRepository {
 
 
     public MutableLiveData<List<Drink>> getOnClickedItem() {
-        return data;//
+        return data;
+    }
+
+    public void deleteOneItem(Drink drink){
+        count = count-1;
+
+        drinks.remove(drink);
+
+
+        data.setValue(drinks);
+
+
     }
 
     public void clearDrinks(){
         count=0;
+        drinks.clear();
         data.setValue(new List<Drink>() {
             @Override
             public int size() {
@@ -174,55 +181,47 @@ public class ClickedDrinkRepository {
 
     }
 
-
     public void setArray(String price, String title, int img,int pricetag) {
 
         switch (count){
             case 0:
                 drinken1 = new Drink(title,price,img,pricetag);
-                List<Drink> drink1 = new ArrayList<>();
 
-                drink1.add(drinken1);
+                drinks.add(drinken1);
 
-                data.setValue(drink1);
+                data.setValue(drinks);
 
                 break;
             case 1:
 
                 drinken2 = new Drink(title,price,img,pricetag);
-                List<Drink> drink2 = new ArrayList<>();
-                drink2.add(drinken1);
-                drink2.add(drinken2);
-                data.setValue(drink2);
+
+                drinks.add(drinken2);
+
+                data.setValue(drinks);
 
                 break;
             case 2:
 
                 drinken3 = new Drink(title,price,img,pricetag);
-                List<Drink> drink3 = new ArrayList<>();
-                drink3.add(drinken1);
-                drink3.add(drinken2);
-                drink3.add(drinken3);
-                data.setValue(drink3);
+
+                drinks.add(drinken3);
+
+                data.setValue(drinks);
                 break;
 
         }
 
         count++;
 
-
-
-
-
-
-
     }
+
 
     public void setArray1(String price, String title, int img,int pricetag,String clubId) {
 
         switch (count){
             case 0:
-                Log.d("HALLLLLLLLLOOOOO11111",clubId);
+
                 drinken1 = new Drink(title,price,img,pricetag,clubId);
                 List<Drink> drink1 = new ArrayList<>();
 
@@ -231,7 +230,7 @@ public class ClickedDrinkRepository {
 
                 break;
             case 1:
-                Log.d("HALLLLLLLLLOOOOO22222",clubId);
+
                 drinken2 = new Drink(title,price,img,pricetag,clubId);
                 List<Drink> drink2 = new ArrayList<>();
                 drink2.add(drinken1);
@@ -240,7 +239,7 @@ public class ClickedDrinkRepository {
 
                 break;
             case 2:
-                Log.d("HALLLLLLLLLOOOOO33333",clubId);
+
                 drinken3 = new Drink(title,price,img,pricetag,clubId);
                 List<Drink> drink3 = new ArrayList<>();
                 drink3.add(drinken1);
@@ -252,11 +251,6 @@ public class ClickedDrinkRepository {
         }
 
         count++;
-
-
-
-
-
 
 
     }

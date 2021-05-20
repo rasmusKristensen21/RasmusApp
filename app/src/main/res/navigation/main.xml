@@ -6,11 +6,7 @@
     android:id="@+id/main"
     app:startDestination="@id/home">
 
-    <fragment
-        android:id="@+id/home"
-        android:name="com.example.myapp.UI.Fragments.HomeFragment"
-        android:label="home"
-        tools:layout="@layout/fragment_home"/>
+
 
     <fragment
         android:id="@+id/drink"
@@ -29,6 +25,20 @@
         android:name="com.example.myapp.UI.Fragments.MapsFragment"
         android:label="Location"
         tools:layout="@layout/fragment_maps"/>
+
+    <fragment
+        android:id="@+id/om_os"
+        android:name="com.example.myapp.UI.Fragments.about_us"
+        android:label="About Us"
+        tools:layout="@layout/about_us"
+        />
+    <fragment
+        android:id="@+id/home"
+        android:name="com.example.myapp.UI.Fragments.HomeFragment"
+        android:label="home"
+        tools:layout="@layout/fragment_home"/>
+
+
 
 
 

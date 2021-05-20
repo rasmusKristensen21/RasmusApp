@@ -1,9 +1,13 @@
 package com.example.myapp.UI.Activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,14 +52,15 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     MainActivityViewModel viewModel;
     DrinkViewModel viewModelDrink;
     TextView placeholder;
+    ProgressDialog dialog;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
-        viewModel.init();
 
 
         checkIfSignedIn();
@@ -73,13 +78,14 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
 
         setNavigationViewListener();
 
-        //setCurrentUserText();
 
 
     }
 
     private void setupNavigation() {
         navController = Navigation.findNavController(this,R.id.fragment_container);
+
+
         setSupportActionBar(toolbar);
 
         appBarConfiguration = new AppBarConfiguration.Builder(
@@ -87,6 +93,7 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                 R.id.drink,
                 R.id.order,
                 R.id.map
+
         ).setOpenableLayout(drawer).build();
 
         NavigationUI.setupActionBarWithNavController(this,navController,appBarConfiguration);
@@ -108,11 +115,13 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
                     case R.id.drink:
                     case R.id.order:
                     case R.id.map:
+                    case R.id.om_os:
                         bottomNavigationView.setVisibility(View.VISIBLE);
                 }
             }
         }));
     }
+
 
 
     @Override
@@ -133,25 +142,39 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     private void checkIfSignedIn() {
         viewModel.getCurrentUser().observe(this, user -> {
             if (user != null) {
-                Context context = getApplicationContext();
-                CharSequence text = "hallo: "+viewModel.getCurrentUser().getValue().getEmail();
-                int duration = Toast.LENGTH_LONG;
-                Toast.makeText(context, text, duration).show();
+
+                final LayoutInflater factory = getLayoutInflater();
+
+                final View textEntryView = factory.inflate(R.layout.welcomeguest, null);
+
+                TextView text = textEntryView.findViewById(R.id.textWelcome);
+
+                text.setText(viewModel.getCurrentUser().getValue().getDisplayName());
+
+
+                dialog = new ProgressDialog(this);
+
+                dialog.show();
+                dialog.setContentView(textEntryView);
+
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                final Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+
+                    }
+                },2000);
+
             } else
                 startLoginActivity();
         });
 
     }
 
-    public void addPriority(View view){
 
-    }
-
-
-
-    public void getCurrentUser(){
-        viewModel.getCurrentUser();
-    }
 
     private void startLoginActivity() {
         startActivity(new Intent(this, LoginActivity.class));
@@ -163,8 +186,10 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
     }
 
     public void goToAboutUs(){
-        Navigation.findNavController(this,R.id.about_us);
+
+        navController.navigate(R.id.om_os);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -187,11 +212,11 @@ public class MainActivity extends AppCompatActivity  implements NavigationView.O
             }
             case R.id.about_us:{
                 goToAboutUs();
+                break;
             }
 
         }drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 }

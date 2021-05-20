@@ -1,13 +1,9 @@
 package com.example.myapp.data.Drinks;
 
 
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
-@Entity(tableName = "drinks")
 public class Drink {
 
-    @PrimaryKey(autoGenerate = true)
     private int pk;
     private String title;
     private String price;
@@ -61,36 +57,8 @@ public class Drink {
         return clubId;
     }
 
-    public void setClubId(String clubId) {
-        this.clubId = clubId;
-    }
-
     public int getPricetag() {
         return pricetag;
-    }
-
-    public void setPricetag(int pricetag) {
-        this.pricetag = pricetag;
-    }
-
-    public int getPk() {
-        return pk;
-    }
-
-    public void setPk(int pk) {
-        this.pk = pk;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
     }
 
     public int getImage() {
@@ -109,7 +77,4 @@ public class Drink {
         return popularity;
     }
 
-    public void setPopularity(int popularity) {
-        this.popularity = popularity;
-    }
 }

@@ -26,6 +26,7 @@ public class MapViewModel extends AndroidViewModel {
     public void setClub(String clubId){
 
         repo.setData(clubId);
+
         repo.setClub(clubId);
     }
 }

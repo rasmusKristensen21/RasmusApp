@@ -13,28 +13,29 @@
         android:layout_height="match_parent"
         tools:context=".UI.Activity.MainActivity">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:paddingBottom="23dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-
-            />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/placeholder"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+
+                android:background="@drawable/coolwallpaperpart2"
+                android:paddingBottom="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottomNavigationView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/purple_700"
+                android:background="@color/purple_500"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +50,7 @@
                 app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar"
                 app:navGraph="@navigation/main" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

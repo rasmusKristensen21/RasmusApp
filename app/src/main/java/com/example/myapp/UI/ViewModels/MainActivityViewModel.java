@@ -18,11 +18,6 @@ public class MainActivityViewModel extends AndroidViewModel {
 
     }
 
-    public void init() {
-        String userId = userRepository.getCurrentUser().getValue().getUid();
-
-
-    }
 
 
 

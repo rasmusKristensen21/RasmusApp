@@ -49,35 +49,23 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
     GoogleMap map;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
-        private final LatLng Silkeborg = new LatLng(-31.9, 115.85);
-        private final LatLng Aarhus = new LatLng(-34.9, 115.85);
-        private final LatLng Funder = new LatLng(-31.9, 120.85);
+
 
         private Marker markerChad;
         private Marker markerMojo;
         private Marker markerZenzyg;
 
 
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
+
         @SuppressLint("PotentialBehaviorOverride")
         @Override
         public void onMapReady(GoogleMap googleMap) {
 
             map = googleMap;
 
-
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
 
-            //map.setMapStyle(GoogleMap.MAP_TYPE_NORMAL);
 
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 enableUserLocation();
@@ -92,7 +80,7 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMarkerClickLis
 
 
             LatLng chad = new LatLng(37.4206, -122.0809);
-            markerChad = googleMap.addMarker(new MarkerOptions().position(chad).title("Chad's Cocktail Empire"));
+            markerChad = googleMap.addMarker(new MarkerOptions().position(chad).title("Chads Cocktails"));
 
             markerChad.setTag(markerChad.getPosition());
             LatLng mojo = new LatLng(37.4207, -122.0825);
